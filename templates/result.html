@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- THEME (Charcoal & Orange) --- */
+        
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --accent-color: #ff9800; /* Orange */
+            --accent-hover: #f57c00;
+            --border-color: #333333;
+            --success-bg: rgba(76, 175, 80, 0.1);
+            --success-text: #4caf50;
+            --error-bg: rgba(244, 67, 54, 0.1);
+            --error-text: #ef5350;
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            font-family: 'Roboto', sans-serif; 
+            margin: 0; 
+            padding: 40px 20px; 
+        }
+
+        .container { 
+            max-width: 1100px; 
+            margin: 0 auto; 
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        /* HEADER */
+        .header-area { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 2px solid var(--border-color); 
+            padding-bottom: 20px; 
+            margin-bottom: 30px; 
+        }
+        
+        .project-title h1 { 
+            font-family: 'Oswald', sans-serif; 
+            color: #fff; 
+            font-size: 32px; 
+            margin: 0; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .project-title h3 { 
+            color: var(--accent-color); 
+            font-size: 14px; 
+            margin: 5px 0 0 0; 
+            font-weight: 500; 
+            letter-spacing: 2px;
+        }
+        
+        /* BUTTONS */
+        .btn-export { 
+            background-color: var(--text-main); 
+            color: var(--bg-color); 
+            border: none; 
+            padding: 12px 24px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-export:hover { background-color: #fff; transform: translateY(-2px); }
+
+        .btn-home { 
+            background-color: transparent; 
+            color: var(--text-muted); 
+            border: 1px solid var(--border-color); 
+            padding: 10px 20px; 
+            border-radius: 4px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            margin-left: 10px;
+            transition: 0.3s;
+        }
+        .btn-home:hover { border-color: var(--accent-color); color: var(--accent-color); }
+
+        /* STATUS BAR */
+        .status-bar { 
+            padding: 12px; 
+            border-radius: 4px; 
+            margin-bottom: 25px; 
+            text-align: center; 
+            font-family: 'Oswald', sans-serif; 
+            letter-spacing: 1px; 
+        }
+        .success { background: var(--success-bg); color: var(--success-text); border-left: 5px solid var(--success-text); }
+        .warning { background: rgba(255, 152, 0, 0.15); color: #ffb74d; border-left: 5px solid #ff9800; }
+        .error { background: var(--error-bg); color: var(--error-text); border-left: 5px solid var(--error-text); }
+
+        /* TABS */
+        .tabs { 
+            display: flex; 
+            gap: 20px; 
+            margin-bottom: 30px; 
+            border-bottom: 1px solid var(--border-color); 
+            padding-bottom: 0;
+            flex-wrap: wrap;
+        }
+        .tab-btn { 
+            background: transparent; 
+            color: var(--text-muted); 
+            border: none; 
+            padding: 15px 5px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 13px;
+            text-transform: uppercase; 
+            position: relative;
+            transition: 0.3s;
+        }
+        .tab-btn:hover { color: #fff; }
+        .tab-btn.active { color: var(--accent-color); }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+
+        /* CONTENT */
+        .tab-content { 
+            display: none; 
+            animation: fadeIn 0.5s ease; 
+        }
+        .tab-content.active { display: block; }
+        
+        /* HEADINGS */
+        h2 { 
+            color: #fff; 
+            font-family: 'Oswald', sans-serif; 
+            font-size: 24px; 
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+        }
+
+        /* TABLES */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background-color: #252525; border-radius: 8px; overflow: hidden; }
+        th { background: #333; color: #fff; padding: 15px; text-align: left; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { border-bottom: 1px solid #333; padding: 15px; font-size: 14px; color: #ccc; }
+        tr:last-child td { border-bottom: none; }
+        
+        /* SQL CODE AREA */
+        pre { 
+            background: #111; 
+            padding: 25px; 
+            border-radius: 6px; 
+            color: #a5d6a7; 
+            border: 1px solid #333; 
+            white-space: pre-wrap; 
+            word-wrap: break-word;       
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* MERMAID ERD */
+        .mermaid-box { 
+            background: #ffffff; 
+            padding: 30px; 
+            border-radius: 8px; 
+            text-align: center; 
+            min-height: 250px; 
+            width: 100%; 
+            overflow: auto; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 5px solid #333; 
+        }
+        .mermaid { width: 100%; display: flex; justify-content: center; }
+
+        /* FIX IT BUTTON */
+        .fix-btn { 
+            background: var(--accent-color); 
+            color: #121212; 
+            border: none; 
+            padding: 6px 16px; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            font-weight: 800; 
+            font-size: 11px; 
+            text-transform: uppercase;
+        }
+        .fix-btn:hover { background-color: #fff; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .norm-header { background: #444 !important; color: var(--accent-color) !important; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-area">
+        <div class="project-title">
+            <h3>PROJECT REPORT</h3>
+            <h1>{{ r.project_name if r.project_name else 'DATABASE SYSTEM' }}</h1>
+        </div>
+        <div>
+            <button class="btn-export" onclick="window.print()">EXPORT PDF</button>
+            <a href="/" class="btn-home">HOME</a>
+        </div>
+    </div>
+
+    {% if r.error %}
+        <div class="status-bar error">⚠ SYSTEM ERROR: {{ r.error }}</div>
+    {% elif r.db_success %} 
+        <div class="status-bar success">✓ SYSTEM DEPLOYED: {{ r.db_status }}</div>
+    {% else %} 
+        <div class="status-bar warning">ℹ PREVIEW MODE: Architecture Generated Successfully &bull; Live DB Sync Skipped ({{ r.db_status }})</div> 
+    {% endif %}
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'summary')">Stage 1: Summary</button>
+        <button class="tab-btn" onclick="openTab(event, 'rules')">Stage 2: Rules</button>
+        <button class="tab-btn" onclick="openTab(event, 'tables')">Stage 3: Tables</button>
+        <button class="tab-btn" onclick="openTab(event, 'gaps')">Stage 4: Gaps</button>
+        <button class="tab-btn" onclick="openTab(event, 'norm')">Stage 5: Normalization</button>
+        <button class="tab-btn" onclick="openTab(event, 'erd')">Stage 6: ERD</button>
+        <button class="tab-btn" onclick="openTab(event, 'sql')">Stage 7: SQL</button>
+    </div>
+
+    <div id="summary" class="tab-content active">
+        <h2>STAGE 1: PROJECT SUMMARY</h2>
+        <p style="font-size:16px; line-height:1.8; color:#ccc; white-space: pre-wrap;">{{ r.project_summary }}</p>
+    </div>
+
+    <div id="rules" class="tab-content">
+        <h2>STAGE 2: BUSINESS RULES</h2>
+        <table>
+            <thead><tr><th width="10%">ID</th><th>Rule Description</th></tr></thead>
+            <tbody>
+                {% if r.business_rules %}
+                    {% for rule in r.business_rules %}
+                    <tr>
+                        <td><span style="color: var(--accent-color); font-weight:bold;">{{ rule.id }}</span></td>
+                        <td>{{ rule.statement }}</td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="tables" class="tab-content">
+        <h2>STAGE 3: TABLE DEFINITIONS</h2>
+        {% if r.table_definitions %}
+            {% for table in r.table_definitions %}
+            <div style="margin-bottom:25px; background:#252525; border-radius:8px; padding:20px; border-left: 4px solid var(--accent-color);">
+                <h3 style="color:#fff; margin:0 0 10px 0; font-family:'Oswald', sans-serif; font-size: 18px;">{{ table.table_name }}</h3>
+                <div style="color:#bbb; font-size:14px; line-height: 1.6;">
+                    <span style="color: var(--accent-color);">COLUMNS:</span> {{ table.columns }}<br>
+                    <span style="color: #888;">CONSTRAINTS:</span> {{ table.constraints }}
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div id="gaps" class="tab-content">
+        <h2>STAGE 4: MISSING RULES & GAPS</h2>
+        <table>
+            <thead><tr><th>Identified Gap</th><th>Proposed Solution</th><th>Action</th></tr></thead>
+            <tbody>
+                {% if r.missing_rules %}
+                    {% for item in r.missing_rules %}
+                    <tr>
+                        <td style="color:#ef5350;">{{ item.rule }}</td>
+                        <td style="color:#9ccc65;">{{ item.solution }}</td>
+                        <td style="text-align:center;">
+                            <form action="/fix" method="POST">
+                                <input type="hidden" name="domain" value="{{ inputs['domain'] }}">
+                                <input type="hidden" name="primary_entity" value="{{ inputs['primary_entity'] }}">
+                                <input type="hidden" name="constraint" value="{{ inputs['constraint'] }}">
+                                <input type="hidden" name="advanced_feature" value="{{ inputs['advanced_feature'] }}">
+                                <input type="hidden" name="security" value="{{ inputs['security'] }}">
+                                <input type="hidden" name="reporting" value="{{ inputs['reporting'] }}">
+                                <input type="hidden" name="common_tasks" value="{{ inputs['common_tasks'] }}">
+                                <input type="hidden" name="new_rule_fix" value="{{ item.solution }}">
+                                <button type="submit" class="fix-btn">FIX IT</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="norm" class="tab-content">
+        <h2>STAGE 5: NORMALIZATION PROCESS</h2>
+        {% if r.normalization_tables %}
+            {% for table in r.normalization_tables %}
+            <div style="margin-bottom: 40px;">
+                <h3 style="color: var(--accent-color); font-size: 16px; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom:5px;">{{ table.stage }}</h3>
+                {% if table.description %}
+                <p style="color: #888; font-size: 13px; margin-top: 0;">{{ table.description }}</p>
+                {% endif %}
+                <div style="overflow-x: auto;">
+                    <table style="margin-top: 0;">
+                        <thead>
+                            <tr>
+                                {% for header in table.headers %}
+                                <th class="norm-header">{{ header }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table.rows %}
+                            <tr class="norm-row">
+                                {% for cell in row %}
+                                <td>{{ cell }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div id="erd" class="tab-content">
+        <h2>STAGE 6: ENTITY RELATIONSHIP DIAGRAM</h2>
+        <div class="mermaid-box">
+            <div class="mermaid">
+                {{ r.er_diagram_mermaid }}
+            </div>
+        </div>
+    </div>
+
+    <div id="sql" class="tab-content">
+        <h2>STAGE 7: SQL SOURCE CODE</h2>
+        <pre>{{ r.sql_code }}</pre>
+    </div>
+
+</div>
+
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: false }); 
+
+    window.renderMermaid = async function() {
+        const element = document.querySelector('.mermaid');
+        if(element && element.innerText.trim() !== "") {
+            element.removeAttribute('data-processed');
+            await mermaid.run({ nodes: [element] });
+        }
+    };
+</script>
+
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.remove("active");
+        }
+        
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        
+        document.getElementById(tabName).style.display = "block";
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.className += " active";
+
+        if (tabName === 'erd' && window.renderMermaid) {
+            setTimeout(() => {
+                window.renderMermaid();
+            }, 100);
+        }
+    }
+</script>
+
+</body>
+</html>

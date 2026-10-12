@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Master AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --input-bg: #252525;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --accent-color: #ff9800;
+            --border-color: #333333;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1350px; /* EXPANDED: to fit 5 cards comfortably */
+            margin: 0 auto;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 40px;
+        }
+
+        .hero-section h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 56px;
+            font-weight: 600;
+            color: #fff;
+            margin: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .hero-section h1::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--accent-color);
+            margin: 10px auto;
+        }
+
+        .hero-section p {
+            color: var(--text-muted);
+            font-size: 18px;
+            margin-top: 20px;
+            font-weight: 300;
+        }
+
+        /* --- SCENARIO CARDS (FIXED) --- */
+        .scenarios {
+            display: flex;
+            gap: 12px; /* Gap reduced */
+            justify-content: space-between;
+            flex-wrap: nowrap; /* NO WRAPPING */
+            margin-bottom: 40px;
+            overflow-x: auto; /* Scrollbar appears on small screens */
+            padding-bottom: 10px; /* Space for scrollbar */
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px; /* Padding reduced */
+            border-radius: 8px;
+            flex: 1; /* All equal width */
+            min-width: 160px; /* Min-width reduced */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 25px rgba(255, 152, 0, 0.15);
+        }
+
+        .card h3 { 
+            margin: 12px 0 8px 0; 
+            color: #fff; 
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px; 
+            letter-spacing: 1px;
+            white-space: nowrap; /* Keep title on one line */
+        }
+        
+        .card p { 
+            margin: 0; 
+            color: var(--text-muted); 
+            font-size: 13px; 
+            line-height: 1.4; 
+        }
+        
+        .icon { 
+            font-size: 26px; /* Icon resized */
+            margin-bottom: 8px; 
+            display: inline-block; 
+            background: rgba(255, 152, 0, 0.1);
+            padding: 10px; 
+            border-radius: 50%;
+            border: 1px solid rgba(255, 152, 0, 0.2);
+        }
+
+        /* --- FORM AREA --- */
+        .form-container {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-title {
+            color: #fff;
+            margin-top: 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .full-width { grid-column: span 2; }
+
+        label {
+            display: block;
+            color: var(--accent-color);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        input, textarea {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            box-sizing: border-box; 
+            transition: 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background-color: #333;
+        }
+
+        /* --- BUTTON --- */
+        .btn-generate {
+            background-color: var(--accent-color);
+            color: #121212;
+            border: none;
+            padding: 18px;
+            width: 100%;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 800;
+            font-family: 'Oswald', sans-serif;
+            cursor: pointer;
+            margin-top: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn-generate:hover {
+            background-color: #fff;
+            color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 152, 0, 0.5);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="hero-section">
+        <h1>Database Master AI</h1>
+        <p>Select a quick-start scenario or define your custom architecture.</p>
+    </div>
+
+    <div class="scenarios">
+        <div class="card" onclick="fillScenario('car_rental')">
+            <span class="icon">🚗</span>
+            <h3>Car Rental</h3>
+            <p>Fleet, bookings & insurance.</p>
+        </div>
+
+        <div class="card" onclick="fillScenario('restaurant')">
+            <span class="icon">🍽️</span>
+            <h3>Restaurant POS</h3>
+            <p>Tables, orders & menu.</p>
+        </div>
+
+        <div class="card" onclick="fillScenario('hr_system')">
+            <span class="icon">👥</span>
+            <h3>HR System</h3>
+            <p>Payroll, staff & leaves.</p>
+        </div>
+
+        <div class="card" onclick="fillScenario('hospital')">
+            <span class="icon">🏥</span>
+            <h3>Hospital</h3>
+            <p>Patients & doctors.</p>
+        </div>
+
+        <div class="card" onclick="fillScenario('library')">
+            <span class="icon">📚</span>
+            <h3>Library</h3>
+            <p>Books & borrowing.</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h2 class="form-title">PROJECT CONFIGURATION</h2>
+        
+        <form action="/" method="POST">
+            <div class="form-grid">
+                
+                <div class="full-width">
+                    <label>Project Domain</label>
+                    <input type="text" name="domain" id="domain" placeholder="e.g. University Library System" required>
+                </div>
+
+                <div>
+                    <label>Primary Entity</label>
+                    <input type="text" name="primary_entity" id="primary_entity" placeholder="e.g. Book Loans" required>
+                </div>
+
+                <div>
+                    <label>Access Control</label>
+                    <input type="text" name="security" id="security" placeholder="e.g. Admin, Librarian, Student">
+                </div>
+
+                <div class="full-width">
+                    <label>Business Constraints</label>
+                    <textarea name="constraint" id="constraint" rows="2" placeholder="e.g. Max 3 books per student."></textarea>
+                </div>
+
+                <div class="full-width">
+                    <label>Automation / Triggers</label>
+                    <input type="text" name="advanced_feature" id="advanced_feature" placeholder="e.g. Auto-calculate fines upon return.">
+                </div>
+
+                <div class="full-width">
+                    <label>Reporting Needs</label>
+                    <input type="text" name="reporting" id="reporting" placeholder="e.g. Monthly overdue books report.">
+                </div>
+
+                <div class="full-width">
+                    <label>Common Operations</label>
+                    <input type="text" name="common_tasks" id="common_tasks" placeholder="e.g. Issue Book, Return Book.">
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn-generate">🚀 INITIALIZE ARCHITECTURE</button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    const scenarios = {
+        car_rental: {
+            domain: "Car Rental Management System",
+            primary_entity: "Rental Agreements",
+            security: "Admin (Full), Agent (Edit), Customer (View Available Cars)",
+            constraint: "A customer cannot rent a car if their license is expired. Minimum rental duration is 1 day.",
+            advanced_feature: "Trigger: Update car status to 'Rented' automatically when a new rental is created.",
+            reporting: "Monthly revenue per car category (SUV, Sedan). List of cars due for maintenance.",
+            common_tasks: "Check-out car, Check-in car, Calculate damage fees."
+        },
+        restaurant: {
+            domain: "Restaurant Reservation & POS System",
+            primary_entity: "Table Orders",
+            security: "Manager (Full), Waiter (Order Entry), Kitchen Staff (View Orders)",
+            constraint: "A table cannot be reserved if it is already occupied for that time slot. Max 8 guests per table.",
+            advanced_feature: "Trigger: Deduct ingredients from Inventory when an Order is placed.",
+            reporting: "Most popular dishes of the week. Total daily sales breakdown by payment method.",
+            common_tasks: "Take order, Split bill, Reserve table."
+        },
+        hr_system: {
+            domain: "HR & Payroll Management System",
+            primary_entity: "Employee Payroll",
+            security: "HR Manager (Full), Accountant (Payroll only), Employee (View Own Slip)",
+            constraint: "Salary cannot be negative. Employee age must be greater than 18.",
+            advanced_feature: "Trigger: Automatically calculate net salary (Gross - Tax) before insert.",
+            reporting: "Total salary expense per department. List of employees with >5 absentee days.",
+            common_tasks: "Process monthly payroll, Approve leave request."
+        },
+        hospital: {
+            domain: "Hospital Patient Management System",
+            primary_entity: "Appointments & Admissions",
+            security: "Admin (Full), Doctor (Update Records), Receptionist (Schedule), Nurse (Vitals)",
+            constraint: "A patient cannot have two appointments at the same time. Doctor must be available.",
+            advanced_feature: "Trigger: Auto-generate Bill when Patient Status changes to 'Discharged'.",
+            reporting: "Daily occupancy rate of ICU beds. List of doctors with highest patient volume.",
+            common_tasks: "Admit Patient, Schedule Surgery, Prescribe Medication."
+        },
+        library: {
+            domain: "University Library Management System",
+            primary_entity: "Book Loans",
+            security: "Chief Librarian (Full), Staff (Issue/Return), Student (Search Only)",
+            constraint: "Maximum 3 books per student. Loan period is 15 days.",
+            advanced_feature: "Trigger: Calculate overdue fine ($1 per day) automatically upon return.",
+            reporting: "List of most borrowed books this month. Students with outstanding fines.",
+            common_tasks: "Issue Book, Return Book, Add New Book to Catalog."
+        }
+    };
+
+    function fillScenario(key) {
+        const data = scenarios[key];
+        
+        document.getElementById('domain').value = data.domain;
+        document.getElementById('primary_entity').value = data.primary_entity;
+        document.getElementById('security').value = data.security;
+        document.getElementById('constraint').value = data.constraint;
+        document.getElementById('advanced_feature').value = data.advanced_feature;
+        document.getElementById('reporting').value = data.reporting;
+        document.getElementById('common_tasks').value = data.common_tasks;
+
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(c => c.style.borderColor = '#333'); 
+        event.currentTarget.style.borderColor = '#ff9800'; 
+        
+        const formContainer = document.querySelector('.form-container');
+        formContainer.style.borderColor = '#ff9800';
+        setTimeout(() => {
+            formContainer.style.borderColor = '#333';
+        }, 500);
+    }
+</script>
+
+</body>
+</html>
